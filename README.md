@@ -41,3 +41,7 @@ This code has not been tested with a Stenoboard, since I don't have one,
 but it does support all 3 protocols correctly on the Volksboard as defined
 in `Volksboard.py`.
 
+Please feel free to submit layouts for additional boards as GitHub issues
+or pull requests. I won't write the code for you but would be glad to include
+your board in the distribution.
+
