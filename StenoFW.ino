@@ -15,24 +15,11 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  *
  * Copyright 2014 Emanuele Caruso. See LICENSE.txt for details.
+ * Copyright 2016 Carl Hauser under the same license.
  */
- 
-#define ROWS 5
-#define COLS 6
 
-/* The following matrix is shown here for reference only.
-char keys[ROWS][COLS] = {
-  {'S', 'T', 'P', 'H', '*', Fn1},
-  {'S', 'K', 'W', 'R', '*', Fn2},
-  {'a', 'o', 'e', 'u', '#'},
-  {'f', 'p', 'l', 't', 'd'},
-  {'r', 'b', 'g', 's', 'z'}
-};*/
+#include "Stenoboard.h"
 
-// Configuration variables
-int rowPins[ROWS] = {13, 12, 11, 10, 9};
-int colPins[COLS] = {8, 7, 6, 5, 4, 2};
-int ledPin = 3;
 long debounceMillis = 20;
 
 // Keyboard state variables
@@ -162,14 +149,6 @@ void readKeys() {
 
 // Send current chord using NKRO Keyboard emulation
 void sendChordNkro() {
-  // QWERTY mapping
-  char qwertyMapping[ROWS][COLS] = {
-    {'q', 'w', 'e', 'r', 't', ' '},
-    {'a', 's', 'd', 'f', 'g', ' '},
-    {'c', 'v', 'n', 'm', '3', ' '},
-    {'u', 'i', 'o', 'p', '[', ' '},
-    {'j', 'k', 'l', ';', '\'', ' '}
-  };
   int keyCounter = 0;
   char qwertyKeys[ROWS * COLS];
   boolean firstKeyPressed = false;
@@ -195,88 +174,14 @@ void sendChordNkro() {
 // Send current chord over serial using the Gemini protocol. 
 void sendChordGemini() {
   // Initialize chord bytes
-  byte chordBytes[] = {B10000000, B0, B0, B0, B0, B0};
+  byte chordBytes[] = {B10000000, 0, 0, 0, 0, 0};
   
-  // Byte 0
-  if (currentChord[2][4]) {
-    chordBytes[0] = B10000001;
-  }
-  
-  // Byte 1
-  if (currentChord[0][0] || currentChord[1][0]) {
-    chordBytes[1] += B01000000;
-  }
-  if (currentChord[0][1]) {
-    chordBytes[1] += B00010000;
-  }
-  if (currentChord[1][1]) {
-    chordBytes[1] += B00001000;
-  }
-  if (currentChord[0][2]) {
-    chordBytes[1] += B00000100;
-  }
-  if (currentChord[1][2]) {
-    chordBytes[1] += B00000010;
-  }
-  if (currentChord[0][3]) {
-    chordBytes[1] += B00000001;
-  }
-  
-  // Byte 2
-  if (currentChord[1][3]) {
-    chordBytes[2] += B01000000;
-  }
-  if (currentChord[2][0]) {
-    chordBytes[2] += B00100000;
-  }
-  if (currentChord[2][1]) {
-    chordBytes[2] += B00010000;
-  }
-  if (currentChord[0][4] || currentChord[1][4]) {
-    chordBytes[2] += B00001000;
-  }
-  
-  // Byte 3
-  if (currentChord[2][2]) {
-    chordBytes[3] += B00001000;
-  }
-  if (currentChord[2][3]) {
-    chordBytes[3] += B00000100;
-  }
-  if (currentChord[3][0]) {
-    chordBytes[3] += B00000010;
-  }
-  if (currentChord[4][0]) {
-    chordBytes[3] += B00000001;
-  }
-  
-  // Byte 4
-  if (currentChord[3][1]) {
-    chordBytes[4] += B01000000;
-  }
-  if (currentChord[4][1]) {
-    chordBytes[4] += B00100000;
-  }
-  if (currentChord[3][2]) {
-    chordBytes[4] += B00010000;
-  }
-  if (currentChord[4][2]) {
-    chordBytes[4] += B00001000;
-  }
-  if (currentChord[3][3]) {
-    chordBytes[4] += B00000100;
-  }
-  if (currentChord[4][3]) {
-    chordBytes[4] += B00000010;
-  }
-  if (currentChord[3][4]) {
-    chordBytes[4] += B00000001;
-  }
-
-  // Byte 5
-  if (currentChord[4][4]) {
-    chordBytes[5] += B00000001;
-  }
+  // Calculate chord bytes using the geminiBytes and geminiBits arrays
+  for (int i = 0; i < ROWS; i++)
+    for (int j = 0; j < COLS; j++)
+      if (currentChord[i][j]) {
+         chordBytes[geminiBytes[i][j]] |= geminiBits[i][j];
+      }
 
   // Send chord bytes over serial
   for (int i = 0; i < 6; i++) {
@@ -285,8 +190,8 @@ void sendChordGemini() {
 }
 
 void sendChordTxBolt() {
-  byte chordBytes[] = {B0, B0, B0, B0, B0};
-  int index = 0;
+  byte chordIdentifier[] = {B00000000, B01000000, B10000000, B11000000};
+  byte chordBytes[] = {0, 0, 0, 0};
   
   // TX Bolt uses a variable length packet. Only those bytes that have active
   // keys are sent. The header bytes indicate which keys are being sent. They
@@ -294,73 +199,21 @@ void sendChordTxBolt() {
   // 00XXXXXX 01XXXXXX 10XXXXXX 110XXXXX
   //   HWPKTS   UE*OAR   GLBPRF    #ZDST
   
-  // byte 1
-  // S-
-  if (currentChord[0][0] || currentChord[1][0]) chordBytes[index] |= B00000001;
-  // T-
-  if (currentChord[0][1]) chordBytes[index] |= B00000010;  
-  // K-
-  if (currentChord[1][1]) chordBytes[index] |= B00000100;
-  // P-
-  if (currentChord[0][2]) chordBytes[index] |= B00001000;
-  // W-
-  if (currentChord[1][2]) chordBytes[index] |= B00010000;
-  // H-
-  if (currentChord[0][3]) chordBytes[index] |= B00100000;
-  // Increment the index if the current byte has any keys set.
-  if (chordBytes[index]) index++;
-  
-  // byte 2
-  // R-
-  if (currentChord[1][3]) chordBytes[index] |= B01000001;
-  // A
-  if (currentChord[2][0]) chordBytes[index] |= B01000010;
-  // O
-  if (currentChord[2][1]) chordBytes[index] |= B01000100;
-  // *
-  if (currentChord[0][4] || currentChord[1][4]) chordBytes[index] |= B01001000;
-  // E
-  if (currentChord[2][2]) chordBytes[index] |= B01010000;
-  // U
-  if (currentChord[2][3]) chordBytes[index] |= B01100000;
-  // Increment the index if the current byte has any keys set.
-  if (chordBytes[index]) index++;
-  
-  // byte 3
-  // -F
-  if (currentChord[3][0]) chordBytes[index] |= B10000001;
-  // -R
-  if (currentChord[4][0]) chordBytes[index] |= B10000010;
-  // -P
-  if (currentChord[3][1]) chordBytes[index] |= B10000100;
-  // -B
-  if (currentChord[4][1]) chordBytes[index] |= B10001000;
-  // -L
-  if (currentChord[3][2]) chordBytes[index] |= B10010000;
-  // -G
-  if (currentChord[4][2]) chordBytes[index] |= B10100000;
-  // Increment the index if the current byte has any keys set.
-  if (chordBytes[index]) index++;
-  
-  // byte 4
-  // -T
-  if (currentChord[3][3]) chordBytes[index] |= B11000001;
-  // -S
-  if (currentChord[4][3]) chordBytes[index] |= B11000010;
-  // -D
-  if (currentChord[3][4]) chordBytes[index] |= B11000100;
-  // -Z
-  if (currentChord[4][4]) chordBytes[index] |= B11001000;
-  // #
-  if (currentChord[2][4]) chordBytes[index] |= B11010000;
-  // Increment the index if the current byte has any keys set.
-  if (chordBytes[index]) index++;
-  
-  // Now we have index bytes followed by a zero byte where 0 < index <= 4.
-  index++; // Increment index to include the trailing zero byte.
-  for (int i = 0; i < index; i++) {
-    Serial.write(chordBytes[i]);
+  // Calculate chord bytes using the txboltBytes and txboltBits arrays
+  for (int i = 0; i < ROWS; i++)
+    for (int j = 0; j < COLS; j++)
+      if (currentChord[i][j]) {
+         chordBytes[txboltBytes[i][j]] |= txboltBits[i][j];
+      }
+
+  // now send the non-zero chord bytes adding the correct identifier to each
+  for (int i = 0; i < 4; i++) {
+    if (chordBytes[i]) {
+       chordBytes[i] |= chordIdentifier[i];
+       Serial.write(chordBytes[i]);
+       }
   }
+  Serial.write((byte) 0);
 }
 
 // Send the chord using the current protocol. If there are fn keys
@@ -369,18 +222,18 @@ void sendChordTxBolt() {
 // they are released, eg. for mouse emulation functionality or custom key presses.
 void sendChord() {
   // If fn keys have been pressed, delegate to corresponding method and return
-  if (currentChord[0][5] && currentChord[1][5]) {
+  if (Key_Fn1 && Key_Fn2) {
     fn1fn2();
     return;
-  } else if (currentChord[0][5]) {
+  } else if (Key_Fn1) {
     fn1();
     return;
-  } else if (currentChord[1][5]) {
+  } else if (Key_Fn2) {
     fn2();
     return;
   }
-  
-  if (protocol == NKRO) {
+
+if (protocol == NKRO) {
     sendChordNkro();
   } else if (protocol == GEMINI) {
     sendChordGemini();
@@ -401,17 +254,17 @@ void sendChord() {
 //    PH-B   ->   Set TX Bolt protocol mode
 void fn1() {
   // "PH" -> Set protocol
-  if (currentChord[0][2] && currentChord[0][3]) {
+  if (Key_P && Key_H) {
     // "-PB" -> NKRO Keyboard
-    if (currentChord[3][1] && currentChord[4][1]) {
+    if (Key__P && Key__B) {
       protocol = NKRO;
     }
     // "-G" -> Gemini PR
-    else if (currentChord[4][2]) {
+    else if (Key__G) {
       protocol = GEMINI;
     }
     // "-B" -> TX Bolt
-    else if (currentChord[4][1]) {
+    else if (Key__B) {
       protocol = TXBOLT;
     }
   }
@@ -428,6 +281,10 @@ void fn2() {
 
 }
 
+// NEED TO THINK ABOUT THIS FOR VOLKSBOARD which doesn't have an LED --
+// though I suppose we could go ahead and let it happen on an unconnected
+// pin.
+
 // Fn1-Fn2 functions
 //
 // This function is called when both "fn1" and "fn1" keys have been pressed.
@@ -437,9 +294,9 @@ void fn2() {
 //   HR-F   ->   LED intensity down
 void fn1fn2() {
   // "HR" -> Change LED intensity
-  if (currentChord[0][3] && currentChord[1][3]) {
+  if (Key_H && Key_R) {
     // "-P" -> LED intensity up
-    if (currentChord[3][1]) {
+    if (Key__P) {
       if (ledIntensity == 0) ledIntensity +=1;
       else if(ledIntensity < 50) ledIntensity += 10;
       else ledIntensity += 30;
@@ -447,7 +304,7 @@ void fn1fn2() {
       analogWrite(ledPin, ledIntensity);
     }
     // "-F" -> LED intensity down
-    if (currentChord[3][0]) {
+    if (Key__F) {
       if(ledIntensity == 0) ledIntensity = 255;
       else if(ledIntensity < 50) ledIntensity -= 10;
       else ledIntensity -= 30;
