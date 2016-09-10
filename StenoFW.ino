@@ -18,7 +18,8 @@
  * Copyright 2016 Carl Hauser under the same license.
  */
 
-#include "Stenoboard.h"
+// #include "Stenoboard.h"
+#include "Volksboard.h"
 
 long debounceMillis = 20;
 

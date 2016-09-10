@@ -1,5 +1,7 @@
 #!/usr/bin/python3
-board = __import__("Stenoboard")
+#board = __import__("Stenoboard")
+board = __import__("Volksboard")
+
 from gemini import *
 from txbolt import *
 

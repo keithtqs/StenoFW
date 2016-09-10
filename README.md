@@ -37,4 +37,7 @@ to say
 
 Compile and download `StenoFW.ino` with the arduino IDE.
 
-This code has not been tested since I don't have a Stenoboard.
+This code has not been tested with a Stenoboard, since I don't have one,
+but it does support all 3 protocols correctly on the Volksboard as defined
+in `Volksboard.py`.
+
