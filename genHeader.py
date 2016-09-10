@@ -37,7 +37,7 @@ def intRepr(b):
     if b==None: return str(0)
     else: return str(b)
     
-print ('int geminiBytes[ROWS][COLS] = {')
+print ('byte geminiBytes[ROWS][COLS] = {')
 print ('  {', '},\n   {'.join([', '.join([intRepr(b) for b in row]) for row in geminiBytes]), '}\n};')
 print (' ')
 
@@ -52,7 +52,7 @@ print (' ')
 txboltBytes = [ [txboltMap.get(stenoChar,(None,None))[0] for stenoChar in row] for row in board.stenoKeys ]
 txboltBits = [ [txboltMap.get(stenoChar,(None,None))[1] for stenoChar in row] for row in board.stenoKeys ]
 
-print ('int txboltBytes[ROWS][COLS] = {')
+print ('byte txboltBytes[ROWS][COLS] = {')
 print ('  {', '},\n   {'.join([', '.join([intRepr(b) for b in row]) for row in txboltBytes]), '}\n};')
 print (' ')
 

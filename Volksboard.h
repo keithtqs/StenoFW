@@ -29,7 +29,7 @@ char stenoKeys[ROWS][COLS] = {
 };
 */
  
-int geminiBytes[ROWS][COLS] = {
+byte geminiBytes[ROWS][COLS] = {
   { 0, 0, 0, 0, 0, 0},
    {0, 1, 1, 1, 1, 2},
    {0, 1, 1, 1, 2, 2},
@@ -49,7 +49,7 @@ byte geminiBits[ROWS][COLS] = {
    {B00001000, B00000100, B00000000, B00000000, B00100000, B00010000 }
 };
  
-int txboltBytes[ROWS][COLS] = {
+byte txboltBytes[ROWS][COLS] = {
   { 0, 3, 3, 3, 3, 3},
    {0, 0, 0, 0, 0, 1},
    {0, 0, 0, 0, 1, 1},
