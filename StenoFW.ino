@@ -37,7 +37,7 @@ int ledIntensity = 1; // Min 0 - Max 255
 #define GEMINI 0
 #define TXBOLT 1
 #define NKRO 2
-int protocol = NKRO;
+int protocol = GEMINI;
 
 // This is called when the keyboard is connected
 void setup() {
@@ -154,7 +154,7 @@ void sendChordNkro() {
   char qwertyKeys[ROWS * COLS];
   boolean firstKeyPressed = false;
   
-  // Calculate qwerty keys array using qwertyMappings[][]
+  // Calculate qwerty keys array using qwertyMapping[][]
   for (int i = 0; i < ROWS; i++)
     for (int j = 0; j < COLS; j++)
       if (currentChord[i][j]) {
