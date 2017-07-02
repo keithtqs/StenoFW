@@ -37,6 +37,11 @@ to say
 
 Compile and download `StenoFW.ino` with the arduino IDE.
 
+As of July 1, 2017 the code starts up in Gemini mode (instead of NKRO)
+and it supports all individual keys of the Volksboard in Gemini mode.
+In TxBolt protocol, keys such as the 2 S- keys, the 4 * keys and the
+12 # keys are all mapped to 1 key (S-, *, or # respectively).
+
 This code has not been tested with a Stenoboard, since I don't have one,
 but it does support all 3 protocols correctly on the Volksboard as defined
 in `Volksboard.py`.
