@@ -6,12 +6,12 @@ ledPin = 6
 
 # Volksboard Steno Layout
 stenoKeys = [
-  ['#1', '#2', '#3', '#4', '#5', '#6'], 
-  ['Fn1', 'S1', 'T', 'P', 'H', '*1'],
-  ['Fn2', 'S2', 'K', 'W', 'R', '*2'],
-  ['#7', '#8', '#9', '#A', '#B', '#C'],
-  ['*3', '-F', '-P', '-L', '-T', '-D'],
-  ['*4', '-R', '-B', '-G', '-S', '-Z'],
+  ['Num1', 'Num2', 'Num3', 'Num4', 'Num5', 'Num6'], 
+  ['Fn1', 'S1', 'T', 'P', 'H', 'Star1'],
+  ['Fn2', 'S2', 'K', 'W', 'R', 'Star2'],
+  ['Num7', 'Num8', 'Num9', 'NumA', 'NumB', 'NumC'],
+  ['Star3', '-F', '-P', '-L', '-T', '-D'],
+  ['Star4', '-R', '-B', '-G', '-S', '-Z'],
   ['E', 'U', None, None, 'A', 'O'],  # this reflects the wiring rather than physical layout
 ]
 
