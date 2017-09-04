@@ -42,6 +42,15 @@ and it supports all individual keys of the Volksboard in Gemini mode.
 In TxBolt protocol, keys such as the 2 S- keys, the 4 * keys and the
 12 # keys are all mapped to 1 key (S-, *, or # respectively).
 
+As of Sept 4, 2017 there is a Python version of the FW in order to use
+a Raspberry Pi instead of an Arduino as the keyboard controller. See the
+comments in the Python code for how to use the `socat` program to send
+output from the keyboard wirelessly using UDP (WiFi) or Bluetooth.
+
+Note that if you want to build a keyboard description file supporting the Python
+version you should use Volksboard_2.py as your model--there's a bit of additional
+information needed for the Python version.
+
 This code has not been tested with a Stenoboard, since I don't have one,
 but it does support all 3 protocols correctly on the Volksboard as defined
 in `Volksboard.py`.
