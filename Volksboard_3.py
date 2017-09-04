@@ -1,10 +1,20 @@
-boardName = 'Volksboard'
+boardName = 'Volksboard_3'
 
-defines = []
+# Volksboard 3 is wired the same as the Volksboard_2 except that columns are driven by
+# a decoder chip whose input is the binary representation of the selected output.
+# So the encoded column is produced on the output pins and the rows are read from the input pins.
 
-rowPins = [10,11,12,13,14,15,16]
-colPins = [0,1,2,3,4,5]
-ledPin = 6
+# defines is a listed of symbols to be #defined in the generated header file
+defines = ['DRIVECODEDCOLUMNS']
+
+# better choice of pins assuming that the microcontroller is a Teensy LC
+rowPins = [14,15,16,17,18,19,20]
+colPins = [0,1,2] # note only 3 pins for six columns; we use binary values [1..6]
+# Wire pin0 to A0 on the decoder chip
+# Wire pin 1 to A1 on the decoder chip
+# Wire pin 2 to A2 on the decoder chip
+# control the on-board LED using ping 13
+ledPin = 13
 
 # Volksboard Steno Layout
 stenoKeys = [

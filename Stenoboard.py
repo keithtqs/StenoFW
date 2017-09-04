@@ -3,6 +3,8 @@
 # All rows should be the same length in these two arrays
 boardName = 'Stenoboard'
 
+defines = []
+
 stenoKeys = [
   ['S1', 'T', 'P', 'H', '*1', 'Fn1'],
   ['S1', 'K', 'W', 'R', '*1', 'Fn2'],

@@ -1,6 +1,8 @@
 #!/usr/bin/python3
+import sys
 #board = __import__("Stenoboard")
-board = __import__("Volksboard")
+
+board = __import__(sys.argv[1])
 
 from gemini import *
 from txbolt import *
@@ -13,6 +15,9 @@ def myrepr(c):
     return repr(c)
 
 print ('// this is the StenoFW header for the %s.' % board.boardName)
+print (' ')
+for sym in board.defines:
+    print ('#define %s'% sym)
 print (' ')
 print ('#define ROWS %d' % ROWS)
 print ('#define COLS %d' % COLS)

@@ -19,7 +19,8 @@
  */
 
 // #include "Stenoboard.h"
-#include "Volksboard.h"
+// #include "Volksboard.h"
+#include "Volksboard_3.h"
 
 long debounceMillis = 20;
 
@@ -43,12 +44,30 @@ int protocol = GEMINI;
 void setup() {
   Keyboard.begin();
   Serial.begin(9600);
+#ifdef DRIVECOLUMNS
+  for (int i = 0; i < COLS; i++) {
+    pinMode(colPins[i], OUTPUT);
+    digitalWrite(colPins[i], HIGH);
+  }
+  for (int i = 0; i < ROWS; i++) {
+    pinMode(rowPins[i], INPUT_PULLUP);
+  }
+#elif defined(DRIVECODEDCOLUMNS)
+  for (int i = 0; i < 3; i++) {
+    pinMode(colPins[i], OUTPUT);
+
+  }
+  for (int i = 0; i < ROWS; i++) {
+    pinMode(rowPins[i], INPUT_PULLUP);
+  }
+#else
   for (int i = 0; i < COLS; i++)
     pinMode(colPins[i], INPUT_PULLUP);
   for (int i = 0; i < ROWS; i++) {
     pinMode(rowPins[i], OUTPUT);
     digitalWrite(rowPins[i], HIGH);
   }
+#endif
   pinMode(ledPin, OUTPUT);
   analogWrite(ledPin, ledIntensity);
   clearBooleanMatrixes();
@@ -138,6 +157,55 @@ void clearBooleanMatrix(boolean booleanMatrix[][COLS], boolean value) {
   }
 }
 
+#ifdef DRIVECOLUMNS
+// Read all keys
+void readKeys() {
+  for (int i = 0; i < COLS; i++) {
+    digitalWrite(colPins[i], LOW);
+    for (int j = 0; j < ROWS; j++)
+      currentKeyReadings[i][j] = digitalRead(rowPins[j]) == LOW ? true : false;
+    digitalWrite(colPins[i], HIGH);
+  }
+}
+#elif defined(DRIVECODEDCOLUMNS)
+void readKeys() {
+  int toggle = 0;
+  digitalWrite(colPins[0], HIGH);
+  digitalWrite(colPins[1], LOW);
+  digitalWrite(colPins[2], HIGH);
+  for (int k = 0; k < 2; k++) {
+    for (int i = 0; i < 3; i++) {
+      digitalWrite(colPins[i], toggle);
+      toggle ^= 1;
+      for (int j = 0; j < ROWS; j++)
+        currentKeyReadings[k*3+i][j] = digitalRead(rowPins[j]) == LOW ? true : false;
+    }
+  }
+}
+// This code works for exactly six columns and 3 pins.
+  // colPins[0] should be attached to A0 on the decoder chips
+  // colPins[1] to A1
+  // colPins[2] to A2
+  // This generates column addresses on the output column pins in the order
+  // 100 - 4
+  // 110 - 6
+  // 010 - 2
+  // 011 - 3
+  // 001 - 1
+  // 101 - 5
+  // Note that the column addresses are designed so that at least 1 bit is 1 in
+  // all cases. Hopefully this is good enough to derive power for the decoder
+  // chip from the signal lines!
+  // Given sequence of generated addresses above, the board's column wires
+  // need to be hooked to the associated Y pins of the decoder chips in that same order:
+  // Column 0 to Y4
+  // Column 1 to Y6
+  // Column 2 to Y2
+  // Column 3 to Y3
+  // Column 4 to Y1
+  // Column 5 to Y5
+
+#else
 // Read all keys
 void readKeys() {
   for (int i = 0; i < ROWS; i++) {
@@ -147,6 +215,7 @@ void readKeys() {
     digitalWrite(rowPins[i], HIGH);
   }
 }
+#endif
 
 // Send current chord using NKRO Keyboard emulation
 void sendChordNkro() {
