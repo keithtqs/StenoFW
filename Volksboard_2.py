@@ -22,27 +22,29 @@ rowPins = [15,16,17,18,19,20]
 colPins = [0,1,2,3,4,5,6]
 # pins for Raspberry Pi GPIO - CHANGE THESE to something sensible
 rowGPIO = [14,15,18,23,24,25]
-colGPIO = [2,3,4,17,27,22,10]
+colGPIO = [10,22,27,17,4,3,2]
 # control the on-board LED using ping 13
 ledPin = 13
 
 # Volksboard 2 Steno Layout
 stenoKeys = [
-  ['Num1', 'Num2', 'Num3', 'Num4', 'Num5', 'Num6', None], 
-  ['Fn1', 'S1', 'T', 'P', 'H', 'Star1', 'O'],
-  ['Fn2', 'S2', 'K', 'W', 'R', 'Star2', 'A'],
-  ['Num7', 'Num8', 'Num9', 'NumA', 'NumB', 'NumC', None],
-  ['Star3', '-F', '-P', '-L', '-T', '-D', 'E',],
-  ['Star4', '-R', '-B', '-G', '-S', '-Z', 'U'],
+  # Gr-W Bl Or Br-W Bl-W Or-W Gr
+  # 19   15 13 11   7    5    3  -- Rpi Zero hardware pin numbers
+  ['Num1', 'Num2', 'Num3', 'Num4', 'Num5', 'Num6', None], # Gr-W 8 
+  ['Fn1', 'S1', 'T', 'P', 'H', 'Star1', 'O'],             # Br   10
+  ['Fn2', 'S2', 'K', 'W', 'R', 'Star2', 'A'],             # Or   12 
+  ['Num7', 'Num8', 'Num9', 'NumA', 'NumB', 'NumC', None], # Br-W 16
+  ['Star3', '-F', '-P', '-L', '-T', '-D', 'E',],          # Bl-W 18 
+  ['Star4', '-R', '-B', '-G', '-S', '-Z', 'U'],           # Or-W 22
 ]
 
 # qwerty mapping for the Volksboard 2
 qwertyMapping = [
     [' ', '1', '2', '3', '4', '5', ' '],  # note first key in each lh row is reserved for Fn
-    [' ', 'q', 'w', 'e', 'r', 't', 'c',],
-    [' ', 'a', 's', 'd', 'f', 'g', 'v'],
+    [' ', 'q', 'w', 'e', 'r', 't', 'v',],
+    [' ', 'a', 's', 'd', 'f', 'g', 'c'],
     [' ', '7', '8', '9', '0', '-', ' '],  # FW and also the first key in the rh number row
-    ['y', 'u', 'i', 'o', 'p', '[', 'm'],
-    ['h', 'j', 'k', 'l', ';', '\'', 'n'],
+    ['y', 'u', 'i', 'o', 'p', '[', 'n'],
+    ['h', 'j', 'k', 'l', ';', '\'', 'm'],
 ]
 

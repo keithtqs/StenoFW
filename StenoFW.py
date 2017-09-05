@@ -75,14 +75,15 @@ def genAccessors():
 # Set up a FIFO to receive output
 # For now, rely on a helper program to communicate strokes to plover
 # running on a different host
+# Note: the rpi socat must be run AFTER StenoFW.py starts
 # For UDP:
-#   socat -u pipe:/tmp/stenoFIFO udp:<hostaddr>:<someport>
+#   socat -u pipe:/tmp/stenoFIFO udp-datagram:<hostaddr>:<someport>
 #   and on the host:
-#     socat -u udp-listen:<sameportasabove>,raw pty,link=/tmp/virtualcom0,raw
+#     socat -u udp-recv:<sameportasabove>,raw pty,link=/tmp/virtualcom0,raw
 #     and configure plover to use /tmp/virtualcom0 as its input port
 # or for Bluetooth:
 #   sudo rfcomm connect hci0 <host’s bluetooth MAC Address> 1
-#   socat -u gopen:/dev/ttyACM0,raw gopen:/dev/rfcomm0,raw
+#   socat -u pipe:/tmp/stenoFIFO gopen:/dev/rfcomm0,raw
 #   and on the host:
 #    sudo rfcomm listen hci0 1
 #    then configure plover to use /dev/rfcomm0 as its input port
@@ -281,7 +282,7 @@ def sendChord():
 #    PH-G   ->   Set Gemini PR protocol mode
 #    PH-B   ->   Set TX Bolt protocol mode
 def fn1():
-    return False
+    return True
     #  "PH" -> Set protocol
     if (Key_P() and Key_H()):
         # "-PB" -> NKRO Keyboard
@@ -303,7 +304,7 @@ def fn1():
 #
 # Current functions: none.
 def fn2():
-    return False
+    return True
 
 # NEED TO THINK ABOUT THIS FOR VOLKSBOARD which doesn't have an LED --
 # though I suppose we could go ahead and let it happen on an unconnected
@@ -311,13 +312,13 @@ def fn2():
 #
 # Fn1-Fn2 functions
 #
-# This function is called when both "fn1" and "fn1" keys have been pressed.
+# This function is called when both "fn1" and "fn2" keys have been pressed.
 #
 # Current functions:
 #   HR-P   ->   LED intensity up
 #   HR-F   ->   LED intensity down
 def fn1fn2():
-    return False
+    return True
     #"HR" -> Change LED intensity
     if (Key_H() and Key_R()):
         # "-P" -> LED intensity up
