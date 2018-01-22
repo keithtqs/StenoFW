@@ -19,7 +19,7 @@ board = __import__("Stenoboard")
 ```
 to say instead
 ```
-board = __import__("Yourboard").py
+board = __import__("Yourboard")
 ```
 Then run
 ```
@@ -58,4 +58,10 @@ in `Volksboard.py`.
 Please feel free to submit layouts for additional boards as GitHub issues
 or pull requests. I won't write the code for you but would be glad to include
 your board in the distribution.
+
+The Volksboard files here pertain to my Volksboards described in [the Plover Blog
+in September, 2017](http://plover.stenoknight.com/2017/09/the-volksboard.html).
+
+THe Crayonboard files pertain to Escaped Echidna's Crayon Box Steno Machine,
+also featured in [the Plover Blog, in December, 2017](http://plover.stenoknight.com/2017/12/amazing-crayon-box-steno-machine.html).
 
