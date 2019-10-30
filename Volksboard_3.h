@@ -1,14 +1,14 @@
 // this is the StenoFW header for the Volksboard_3.
- 
+
 #define DRIVECODEDCOLUMNS
- 
-#define ROWS 7
-#define COLS 6
+
+#define ROWS 3
+#define COLS 10
 #define ledPin 13
- 
-int rowPins[ROWS] = { 14, 15, 16, 17, 18, 19, 20 };
-int colPins[COLS] = { 0, 1, 2 };
- 
+
+int rowPins[ROWS] = { 1, 2, 3 };
+int colPins[COLS] = { 21, 20, 19, 18, 17, 16, 15, 14, 13, 12 };
+
 char qwertyMapping[ROWS][COLS] = {
   { ' ', '1', '2', '3', '4', '5'},
    {' ', 'q', 'w', 'e', 'r', 't'},
@@ -18,7 +18,7 @@ char qwertyMapping[ROWS][COLS] = {
    {'h', 'j', 'k', 'l', ';', '\''},
    {'n', 'm', ' ', ' ', 'c', 'v' }
 };
- 
+
 /* this is for reference only -- the Fn keys are not valid C characters.
 char stenoKeys[ROWS][COLS] = {
   { 'Num1', 'Num2', 'Num3', 'Num4', 'Num5', 'Num6'},
@@ -30,7 +30,7 @@ char stenoKeys[ROWS][COLS] = {
   { 'E', 'U', None, None, 'A', 'O' }
 };
 */
- 
+
 byte geminiBytes[ROWS][COLS] = {
   { 0, 0, 0, 0, 0, 0},
    {0, 1, 1, 1, 1, 2},
@@ -40,7 +40,7 @@ byte geminiBytes[ROWS][COLS] = {
    {3, 3, 4, 4, 4, 5},
    {3, 3, 0, 0, 2, 2 }
 };
- 
+
 byte geminiBits[ROWS][COLS] = {
   { B00100000, B00010000, B00001000, B00000100, B00000010, B00000001},
    {B01000000, B01000000, B00010000, B00000100, B00000001, B00001000},
@@ -50,7 +50,7 @@ byte geminiBits[ROWS][COLS] = {
    {B00010000, B00000001, B00100000, B00001000, B00000010, B00000001},
    {B00001000, B00000100, B00000000, B00000000, B00100000, B00010000 }
 };
- 
+
 byte txboltBytes[ROWS][COLS] = {
   { 0, 0, 0, 0, 0, 0},
    {0, 0, 0, 0, 0, 0},
@@ -60,7 +60,7 @@ byte txboltBytes[ROWS][COLS] = {
    {0, 2, 2, 2, 3, 3},
    {1, 1, 0, 0, 1, 1 }
 };
- 
+
 byte txboltBits[ROWS][COLS] = {
   { B00000000, B00000000, B00000000, B00000000, B00000000, B00000000},
    {B00000000, B00000001, B00000010, B00001000, B00100000, B00000000},
@@ -70,7 +70,7 @@ byte txboltBits[ROWS][COLS] = {
    {B00000000, B00000010, B00001000, B00100000, B00000010, B00001000},
    {B00010000, B00100000, B00000000, B00000000, B00000010, B00000100 }
 };
- 
+
 #define Key__B (currentChord[5][2])
 #define Key__D (currentChord[4][5])
 #define Key__F (currentChord[4][1])
